@@ -50,7 +50,6 @@ const updateStudent = async (req, res) => {
   try {
     const { id } = req.params;
     const { first_name, last_name, email } = req.body;
-    
 
     const currentStudent = await Student.getStudentById(id);
     if (!currentStudent) {
@@ -67,7 +66,7 @@ const updateStudent = async (req, res) => {
     }
 
     const updatedData = {
-      id: id, 
+      id: id,
       first_name: first_name || currentStudent.first_name,
       last_name: last_name || currentStudent.last_name,
       email: email || currentStudent.email,
@@ -82,9 +81,25 @@ const updateStudent = async (req, res) => {
   }
 };
 
+const deleteStudent = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const currentStudent = await Student.getStudentById(id);
+    if (!currentStudent) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+    await Student.deleteStudent(id);
+    res.status(200).json({ message: "Student deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting student:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   getStudents,
   getSingleStudent,
   createStudent,
   updateStudent,
+  deleteStudent
 };

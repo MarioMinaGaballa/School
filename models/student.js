@@ -80,10 +80,22 @@ const updateStudent = async (studentData) => {
   }
 };
 
+const deleteStudent = async (id) => {
+  try {
+    const { rows } = await db.query(
+      "DELETE FROM students WHERE student_id=$1 RETURNING *",
+      [id]
+    );
+  } catch (error) {
+    console.error("Error deleting student", error);
+  }
+};
+
 module.exports = {
   getAllStudents,
   getStudentById: getStudent,
   createStudent,
   findStudentByEmail,
   updateStudent,
+  deleteStudent
 };
