@@ -101,5 +101,5 @@ module.exports = {
   getSingleStudent,
   createStudent,
   updateStudent,
-  deleteStudent
+  deleteStudent,
 };

@@ -93,9 +93,9 @@ const deleteStudent = async (id) => {
 
 module.exports = {
   getAllStudents,
-  getStudentById: getStudent,
+  getStudentById,
   createStudent,
   findStudentByEmail,
   updateStudent,
-  deleteStudent
+  deleteStudent,
 };
