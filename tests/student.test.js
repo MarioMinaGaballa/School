@@ -1,40 +1,31 @@
 const request = require('supertest');
-const app = require('../app'); // Make sure this path is correct
-const db = require('../models/db'); // Make sure this path is correct
-const { v4: uuidv4 } = require('uuid'); // Import the uuid function
+const app = require('../app'); 
+const db = require('../models/db'); 
+const { v4: uuidv4 } = require('uuid'); 
 
-// A variable to hold the student we create for testing
 let testStudent;
 
 describe('Student API', () => {
-    // This will run once before all tests in this file
     beforeAll(async () => {
-        // Create a dummy student to use in update, delete, and get tests
-        const studentId = uuidv4(); // <-- FIX: Generate the UUID here in the code
+        const studentId = uuidv4();
         const studentData = {
             first_name: 'Test',
             last_name: 'User',
             email: 'test.user@example.com'
         };
         const { rows } = await db.query(
-            // <-- FIX: Pass the generated UUID as a parameter ($1)
             "INSERT INTO students (student_id, first_name, last_name, email) VALUES ($1, $2, $3, $4) RETURNING *",
             [studentId, studentData.first_name, studentData.last_name, studentData.email]
         );
         testStudent = rows[0];
     });
 
-    // This will run once after all tests in this file are finished
     afterAll(async () => {
-        // Clean up the database by deleting all test students
         await db.query("DELETE FROM students WHERE email LIKE 'test.%'");
-        // Close the database connection to allow Jest to exit
         await db.end();
     });
 
-    /**
-     * Test creating a new student
-     */
+    
     describe('POST /api/students/createStudent', () => {
         it('should create a new student and return it', async () => {
             const newStudent = {
@@ -57,7 +48,7 @@ describe('Student API', () => {
             const existingStudent = {
                 first_name: 'Jane',
                 last_name: 'Doe',
-                email: 'test.user@example.com' // Same email as the student created in beforeAll
+                email: 'test.user@example.com' 
             };
             await request(app)
                 .post('/api/students/createStudent')
@@ -76,9 +67,6 @@ describe('Student API', () => {
         });
     });
 
-    /**
-     * Test fetching all students
-     */
     describe('GET /api/students/', () => {
         it('should return a list of all students', async () => {
             const response = await request(app)
@@ -91,9 +79,7 @@ describe('Student API', () => {
         });
     });
 
-    /**
-     * Test fetching a single student by ID
-     */
+
     describe('GET /api/students/:id', () => {
         it('should return a single student if ID is valid', async () => {
             const response = await request(app)
@@ -113,9 +99,7 @@ describe('Student API', () => {
         });
     });
 
-    /**
-     * Test updating a student
-     */
+  
     describe('PUT /api/students/updateStudent/:id', () => {
         it('should update a student and return the updated data', async () => {
             const updatedData = {
@@ -141,12 +125,9 @@ describe('Student API', () => {
         });
     });
 
-    /**
-     * Test deleting a student
-     */
+
     describe('DELETE /api/students/deleteStudent/:id', () => {
         it('should delete a student and return a success message', async () => {
-            // Create a new student specifically for the delete test
             const studentToDelete = {
                 first_name: 'ToDelete',
                 last_name: 'User',
@@ -162,7 +143,6 @@ describe('Student API', () => {
 
             expect(response.body.message).toBe('Student deleted successfully');
 
-            // Verify the student was actually deleted by trying to fetch them
             await request(app)
                 .get(`/api/students/${studentIdToDelete}`)
                 .expect(404);

@@ -1,15 +1,12 @@
 const request = require('supertest');
-const app = require('../app'); // Ensure the path to your app.js is correct
-const db = require('../models/db'); // Ensure the path to your db.js is correct
+const app = require('../app'); 
+const db = require('../models/db'); 
 const { v4: uuidv4 } = require('uuid');
 
-// We will define variables to use across our tests
 let testTeacher;
 
 describe('Teacher API', () => {
-    // This runs once before all tests
     beforeAll(async () => {
-        // We create a sample teacher to use for GET, PUT, and DELETE tests
         const teacherId = uuidv4();
         const teacherData = {
             first_name: 'Jane',
@@ -23,17 +20,12 @@ describe('Teacher API', () => {
         testTeacher = rows[0];
     });
 
-    // This runs once after all tests are finished
     afterAll(async () => {
-        // Clean up the database by deleting all teachers created during the tests
         await db.query("DELETE FROM teachers WHERE email LIKE 'test.%'");
-        // Close the database connection to allow Jest to exit cleanly
         await db.end();
     });
 
-    /**
-     * Test Suite for POST /api/teachers/createTeacher
-     */
+  
     describe('POST /api/teachers/createTeacher', () => {
         it('should create a new teacher successfully', async () => {
             const newTeacher = {
@@ -55,7 +47,7 @@ describe('Teacher API', () => {
             const duplicateTeacher = {
                 first_name: 'Another',
                 last_name: 'Jane',
-                email: 'test.jane.doe@example.com' // Same email as in beforeAll
+                email: 'test.jane.doe@example.com' 
             };
             await request(app)
                 .post('/api/teachers/createTeacher')
@@ -75,9 +67,6 @@ describe('Teacher API', () => {
         });
     });
 
-    /**
-     * Test Suite for GET /api/teachers/
-     */
     describe('GET /api/teachers/', () => {
         it('should return an array of all teachers', async () => {
             const response = await request(app)
@@ -90,11 +79,7 @@ describe('Teacher API', () => {
         });
     });
 
-    /**
-     * Test Suite for GET /api/teachers/:id (SKIPPED)
-     * This test is skipped because the endpoint is not implemented yet.
-     * See the note at the top of the file to implement it.
-     */
+
     describe('GET /api/teachers/:id', () => {
         it.skip('should return a single teacher by ID', async () => {
             const response = await request(app)
@@ -114,9 +99,6 @@ describe('Teacher API', () => {
         });
     });
 
-    /**
-     * Test Suite for PUT /api/teachers/updateTeacher/:id
-     */
     describe('PUT /api/teachers/updateTeacher/:id', () => {
         it('should update a teacher successfully', async () => {
             const updatedInfo = {
@@ -142,12 +124,9 @@ describe('Teacher API', () => {
         });
     });
 
-    /**
-     * Test Suite for DELETE /api/teachers/deleteTeacher/:id
-     */
+  
     describe('DELETE /api/teachers/deleteTeacher/:id', () => {
         it('should delete a teacher successfully', async () => {
-            // Create a new teacher just for this delete test to avoid conflicts
             const teacherToDelete = {
                 first_name: 'Temp',
                 last_name: 'Teacher',
@@ -156,7 +135,6 @@ describe('Teacher API', () => {
             const createResponse = await request(app).post('/api/teachers/createTeacher').send(teacherToDelete);
             const teacherId = createResponse.body.teacher_id;
 
-            // Now delete the teacher
             await request(app)
                 .delete(`/api/teachers/deleteTeacher/${teacherId}`)
                 .expect('Content-Type', /json/)

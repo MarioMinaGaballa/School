@@ -34,7 +34,6 @@ const updateTeacher = async (req, res) => {
       return res.status(404).json({ message: "Teacher not found" });
     }
 
-    // تحقق فقط لو الإيميل الجديد مختلف عن القديم
     if (email && email !== currentTeacher.email) {
       const teacherWithNewEmail = await teacher.findTeacherByEmail(email);
       if (teacherWithNewEmail) {

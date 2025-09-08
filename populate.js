@@ -23,8 +23,6 @@ const populateDatabase = async () => {
     console.error('Error populating the database:');
     console.error(error);
   } finally {
-    // 5. إغلاق الاتصال
-    // تأكد من أن الكائن الذي تستورده من db.js لديه دالة .end()
     if (dbConnection && typeof dbConnection.end === 'function') {
       await dbConnection.end();
       console.log('Connection closed.');
@@ -32,5 +30,4 @@ const populateDatabase = async () => {
   }
 };
 
-// تشغيل السكربت
 populateDatabase();
