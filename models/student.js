@@ -25,8 +25,8 @@ const getStudent = async (id) => {
 const createStudent = async (first_name, last_name, email) => {
   const newStudentId = uuidv4();
   try {
-    const rows = await db.query(
-      "INSERT INTO students (student_id,first_name,last_name,email) Values($1,$2,$3,$4)",
+    const {rows} = await db.query(
+      "INSERT INTO students (student_id,first_name,last_name,email) Values($1,$2,$3,$4) RETURNING *",
       [newStudentId, first_name, last_name, email]
     );
     return rows[0];
@@ -56,11 +56,7 @@ const getStudentById = async (id) => {
       "SELECT * FROM students WHERE student_id = $1",
       [id]
     );
-    if (rows.length !== 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return rows[0];
   } catch (error) {
     console.error("Error finding student by ID", error);
   }

@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "populate-db": "node populate.js"
+    "populate-db": "node populate.js",
+      "test": "cross-env NODE_ENV=test jest --testTimeout=5000 --detectOpenHandles"
   },
   "keywords": [],
   "author": "",
@@ -16,5 +17,10 @@
     "node-postgres": "^0.6.2",
     "pg": "^8.16.3",
     "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "cross-env": "^10.0.0",
+    "jest": "^30.1.3",
+    "supertest": "^7.1.4"
   }
 }

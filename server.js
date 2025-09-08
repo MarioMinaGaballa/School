@@ -1,18 +1,9 @@
-const express = require("express");
-const app = express();
-const studentRoutes = require("./routes/student");
-const teacherRoutes = require("./routes/teacher");
-const reportsRoutes = require("./routes/reports/reports");
-const cors = require('cors');
+// Import the app from your new app.js file
+const app = require('./app');
 
-app.use(cors());
-app.use(express.json());
+const port = process.env.PORT || 5000;
 
-app.use("/api/students", studentRoutes);
-app.use("/api/teachers", teacherRoutes);
-app.use("/api/reports", reportsRoutes);
-
-const port = 5000;
+// This is the only place app.listen should be called
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on http://localhost:${port}`);
 });
